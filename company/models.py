@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from djongo import models
 from django import forms
 from django.conf import settings
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms.widgets import HiddenInput
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -37,6 +37,17 @@ class CompanyCreationForm(UserCreationForm):
             user.save()
         return user
 
+
+class CompanyLoginForm(AuthenticationForm):
+    userType = forms.CharField(required=False, initial="student")
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'userType']
+
+    def __init__(self, *args, **kwargs):
+        super(CompanyLoginForm, self).__init__(*args, **kwargs)
+        self.fields['userType'].widget = HiddenInput()
 
 class CompanyProfileForm(forms.ModelForm):
 

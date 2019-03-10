@@ -15,6 +15,37 @@ def profile(request):
     return render(request, 'student/profile.html')
 
 
+def studentLogin(request):
+    if request.method == 'POST':
+        studentLoginForm = StudentLoginForm(data=request.POST)
+        if studentLoginForm.is_valid():
+            user = studentLoginForm.get_user()
+            if user:
+                login(request, user)
+        return redirect('student:home')
+    else:
+        studentLoginForm = StudentLoginForm()
+    return render(request, 'student/login.html', {'studentLoginForm': studentLoginForm})
+
+def signup(request):
+    if request.method == 'POST':
+        studentCreationForm = StudentCreationForm(request.POST)
+        if studentCreationForm.is_valid():
+            studentCreationForm.save()
+            username = studentCreationForm.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}')
+            return redirect('student:profile')
+    else:
+        studentCreationForm = StudentCreationForm()
+    return render(request, 'student/signup.html', {'studentCreationForm': studentCreationForm})
+
+
+def studentLogout(request):
+    logout(request)
+    message = "logout successful"
+    return redirect('student:login')
+
+
 # def login(request):
 #     if request.method == 'POST':
 #         studentLoginForm = StudentLoginForm(request.POST)
@@ -29,32 +60,4 @@ def profile(request):
 #         studentLoginForm = StudentLoginForm()
 #     return render(request, 'student/login.html', {'studentLoginForm': studentLoginForm})
 
-def studentLogin(request):
-    if request.method == 'POST':
-        studentLoginForm = StudentLoginForm(data=request.POST)
-        if studentLoginForm.is_valid():
-            user = form.get_user()
-            if user:
-                login(request,user)
-        return redirect('/student/')
-    else:
-        studentLoginForm = StudentLoginForm()
-    return render(request, 'student/login.html', {'studentLoginForm': studentLoginForm})
 
-
-def studentLogin(request):
-    logout(request)
-    message = "logout successful"
-    return redirect('student:login')
-
-def signup(request):
-    if request.method == 'POST':
-        studentCreationForm = StudentCreationForm(request.POST)
-        if studentCreationForm.is_valid():
-            studentCreationForm.save()
-            username = studentCreationForm.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}')
-            return redirect('profile')
-    else:
-        studentCreationForm = StudentCreationForm()
-    return render(request, 'student/signup.html', {'studentCreationForm': studentCreationForm})

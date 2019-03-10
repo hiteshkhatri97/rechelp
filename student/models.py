@@ -67,7 +67,7 @@ class SudentProfileForm(forms.ModelForm):
         super(SudentProfileForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        student = super(CompanyProfileForm, self).save(commit=False)
+        student = super(SudentProfileForm, self).save(commit=False)
         if commit:
             user.save()
         return student

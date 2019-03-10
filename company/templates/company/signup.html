@@ -1,1 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
 <p>company signup</p>
+<p><a href="{% url 'company:login' %}">login?</a></p>
+<form method="POST" action="">
+    {% csrf_token %}
+    {{ companyCreationForm.as_p }}
+    <button type="submit">sign up</button>
+</form>
+{% endblock content %}
