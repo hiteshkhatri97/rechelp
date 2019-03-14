@@ -1,12 +1,44 @@
- <!DOCTYPE html>
- <html>
+{% load static%}
+{% load crispy_forms_tags %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html>
 
-    <head>
-        <title>RecHelp</title>
-    </head>
+<head>
+    <title>RecHelp</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-reboot.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-grid.min.css' %}">
+</head>
+
 <body>
 
-    {% block content %}
-    {% endblock content %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">RecHelp</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            {% block header %}
+            {% endblock header %}
+
+        </div>
+
+    </nav>
+
+
+
+
+    <div class="container">
+
+        {% block content %}
+        {% endblock content %}
+    </div>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
- </html>
+
+</html>

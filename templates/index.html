@@ -1,6 +1,15 @@
 {% extends "base.html" %}
+
+{% block header %}
+<ul class="navbar-nav mr-auto"></ul>
+<li class="nav-item">
+    <a href="{% url 'company:login'  %}">COMPANY</a>
+</li>
+<li class="nav-item">
+    <a href="{% url 'student:login'  %}">STUDENT</a>
+</li>
+</ul>
+{% endblock header %}
+
 {% block content %}
-<p><center>Welcome to RecHelp</center></p>
-<p><a href="{% url 'company:login'  %}">company</a></p>
-<p><a href="{% url 'student:login'  %}">student</a></p>
 {% endblock content %}

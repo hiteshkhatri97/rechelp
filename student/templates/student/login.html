@@ -5,7 +5,6 @@
 <form method="POST" action="">
     {% csrf_token %}
     {{ studentLoginForm.as_p }}
-    <button type="submit">login</button>
+    <button type="submit" class="btn btn-success">login</button>
 </form>
 {% endblock content %}
-

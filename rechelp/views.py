@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from pymongo import MongoClient
+from django.conf import settings
 
 def appliedStudentsTest(request):
 
@@ -51,4 +52,4 @@ def index(request):
             return redirect('company/')
         if request.user.userType == 'student':
             return redirect('student/')
-    return render(request, 'index.html')
+    return render(request, 'index.html', {'basedir': settings.STATICFILES_DIRS})
