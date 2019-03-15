@@ -52,4 +52,4 @@ def index(request):
             return redirect('company/')
         if request.user.userType == 'student':
             return redirect('student/')
-    return render(request, 'index.html', {'basedir': settings.STATICFILES_DIRS})
+    return render(request, 'index.html')

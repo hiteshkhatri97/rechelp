@@ -1,14 +1,8 @@
 {% extends "base.html" %}
 
 {% block header %}
-<ul class="navbar-nav mr-auto"></ul>
-<li class="nav-item">
-    <a href="{% url 'company:login'  %}">COMPANY</a>
-</li>
-<li class="nav-item">
-    <a href="{% url 'student:login'  %}">STUDENT</a>
-</li>
-</ul>
+<a class="nav-link" href="{% url 'company:login'  %}">COMPANY</a>
+<a class="nav-link" href="{% url 'student:login'  %}">STUDENT</a>
 {% endblock header %}
 
 {% block content %}
