@@ -7,7 +7,6 @@ from django.contrib.auth import login
 def loginForm(request, user_type):
 
     form = StudentLoginForm() if user_type == 'student' else CompanyLoginForm()
-
     if request.method == 'POST':
         form = StudentLoginForm(
             data=request.POST) if user_type == 'student' else CompanyLoginForm(data=request.POST)
@@ -16,7 +15,8 @@ def loginForm(request, user_type):
             if user and user.userType == user_type:
                 # TODO: SEND A NICE MESSAGE IF SOMEONE TRIES TO LOGIN WITH CREDENTIALS OF DIFFERENT USER TYPE
                 login(request, user)
-        return redirect(user_type + ':home')
+                return redirect(user_type + ':home')
+
     return render(request, user_type + '/login.html', {'form': form})
 
 

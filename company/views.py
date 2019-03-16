@@ -23,7 +23,6 @@ def companyLogin(request):
 
 def signup(request):
     return signupForm(request, 'company')
-    companyCreationForm = CompanyCreationForm()
 
 
 def companyLogout(request):
