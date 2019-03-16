@@ -20,6 +20,7 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+
 class CompanyCreationForm(UserCreationForm):
     userType = forms.CharField(required=False, initial="company")
 
@@ -49,17 +50,15 @@ class CompanyLoginForm(AuthenticationForm):
         super(CompanyLoginForm, self).__init__(*args, **kwargs)
         self.fields['userType'].widget = HiddenInput()
 
+
 class CompanyProfileForm(forms.ModelForm):
 
     class Meta:
         model = Company
-        fields = ['name', 'email', 'phone', 'address']
+        fields = ['name', 'email', 'phone',
+                  'address', 'user', 'profileCompleted']
 
     def __init__(self, *args, **kwargs):
         super(CompanyProfileForm, self).__init__(*args, **kwargs)
-
-    def save(self, commit=True):
-        company = super(CompanyProfileForm, self).save(commit=False)
-        if commit:
-            user.save()
-        return company
+        self.fields['user'].widget = HiddenInput()
+        self.fields['profileCompleted'].widget = HiddenInput()

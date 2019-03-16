@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from reusables.reusables import loginForm, signupForm
+from reusables.reusables import loginForm, signupForm, profileForm
 User = get_user_model()
 
 
@@ -13,8 +13,9 @@ def home(request):
     return render(request, 'student/home.html')
 
 
+@login_required(login_url="student:login")
 def profile(request):
-    return render(request, 'student/profile.html')
+    return profileForm(request, 'student')
 
 
 def studentLogin(request):
@@ -25,21 +26,7 @@ def signup(request):
     return signupForm(request, 'student')
 
 
+@login_required(login_url="student:login")
 def studentLogout(request):
     logout(request)
     return redirect('student:login')
-
-
-# def login(request):
-#     if request.method == 'POST':
-#         studentLoginForm = StudentLoginForm(request.POST)
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         userType = request.POST.get('userType')
-#         user = authenticate(username = username, password = password, userType = userType)
-#         if user:
-#             login(request)
-#             return redirect('home')
-#     else:
-#         studentLoginForm = StudentLoginForm()
-#     return render(request, 'student/login.html', {'studentLoginForm': studentLoginForm})

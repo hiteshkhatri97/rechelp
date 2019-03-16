@@ -6,14 +6,16 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms.widgets import HiddenInput
 from django.contrib.auth import get_user_model
 User = get_user_model()
-    
+
+
 class Student(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    firstName = models.CharField(default='',max_length=50)
+    firstName = models.CharField(default='', max_length=50)
     lastName = models.CharField(default='', max_length=50)
-    enrollmentNumber = models.CharField(default='',max_length=20)
-    picture = models.ImageField(default='default.png',upload_to='profile_pics')
+    enrollmentNumber = models.CharField(default='', max_length=20)
+    picture = models.ImageField(
+        default='default.png', upload_to='profile_pics')
     wtMarks = models.SmallIntegerField(default='0')
     androidMarks = models.SmallIntegerField(default='0')
     iosMarks = models.SmallIntegerField(default='0')
@@ -56,26 +58,20 @@ class StudentLoginForm(AuthenticationForm):
         self.fields['userType'].widget = HiddenInput()
 
 
-class SudentProfileForm(forms.ModelForm):
+class StudentProfileForm(forms.ModelForm):
 
     class Meta:
         model = Student
         fields = ['firstName', 'lastName',
-                  'enrollmentNumber', 'picture', 'wtMarks', 'androidMarks', 'iosMarks', 'javaMarks', 'pythonMarks', 'fieldsOfInterest']
+                  'enrollmentNumber', 'picture', 'wtMarks', 'androidMarks', 'iosMarks', 'javaMarks', 'pythonMarks', 'fieldsOfInterest', 'user', 'profileCompleted']
 
     def __init__(self, *args, **kwargs):
-        super(SudentProfileForm, self).__init__(*args, **kwargs)
-
-    def save(self, commit=True):
-        student = super(SudentProfileForm, self).save(commit=False)
-        if commit:
-            user.save()
-        return student
+        super(StudentProfileForm, self).__init__(*args, **kwargs)
+        self.fields['user'].widget = HiddenInput()
+        self.fields['profileCompleted'].widget = HiddenInput()
 
 
 # class AppliedStudentForm(ModelForm):
 #     class Meta:
 #         model = Student
 #         fields = ['enrollmentNumber']
-
-
