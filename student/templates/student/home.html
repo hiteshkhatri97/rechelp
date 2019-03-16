@@ -1,6 +1,13 @@
 {% extends "base.html" %}
+
+{% block header %}
+{% if user.is_authenticated %}
+<a class="nav-link" href="{% url 'student:logout' %}">LOGOUT</a>
+{% endif %}
+<a class="nav-link" href="{% url 'student:profile' %}">PROFILE</a>
+
+{% endblock header %}
+
 {% block content %}
-<p>student home</p>
-<p><a href="{% url 'student:logout' %}">logout</a></p>
-<p><a href="{% url 'student:profile' %}">profile</a></p>
+
 {% endblock content %}

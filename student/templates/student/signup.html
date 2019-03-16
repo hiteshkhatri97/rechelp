@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% block header %}
+
+<a class="nav-link" href="{% url 'student:login' %}">LOGIN</a>
+
+{% endblock header %}
+
 {% block content %}
-<p>student signup</p>
-<p><a href="{% url 'student:login' %}">login?</a></p>
+
 <form method="POST" action="">
     {% csrf_token %}
     {{ form|crispy }}
     <button type="submit" class="btn btn-success">sign up</button>
     <button type="reset" class="btn btn-danger">reset</button>
 </form>
+
 {% endblock content %}
