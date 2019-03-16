@@ -39,7 +39,7 @@ class CompanyCreationForm(UserCreationForm):
 
 
 class CompanyLoginForm(AuthenticationForm):
-    userType = forms.CharField(required=False, initial="student")
+    userType = forms.CharField(required=False, initial="company")
 
     class Meta:
         model = User

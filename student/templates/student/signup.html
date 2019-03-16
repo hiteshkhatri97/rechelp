@@ -5,7 +5,7 @@
 <p><a href="{% url 'student:login' %}">login?</a></p>
 <form method="POST" action="">
     {% csrf_token %}
-    {{ studentCreationForm|crispy }}
+    {{ form|crispy }}
     <button type="submit" class="btn btn-success">sign up</button>
     <button type="reset" class="btn btn-danger">reset</button>
 </form>
