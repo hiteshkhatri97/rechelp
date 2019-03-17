@@ -5,12 +5,33 @@ from django.contrib.auth import login, logout
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from reusables.reusables import loginForm, signupForm, profileForm
+from post.models import addPostForm, Post
+from . models import Company
 User = get_user_model()
 
 
 @login_required(login_url="company:login")
 def home(request):
-    return render(request, 'company/home.html')
+    currentCompanyPosts = Post.objects.filter(
+        company=getCurrentCompany(request))
+    return render(request, 'company/home.html', {'posts': currentCompanyPosts})
+
+
+@login_required(login_url="company:login")
+def addPost(request):
+    company = getCurrentCompany(request)
+
+    formInitialData = {'company': company}
+    form = addPostForm(initial=formInitialData)
+
+    if request.method == 'POST':
+        form = addPostForm(
+            request.POST)
+        if form.is_valid():
+
+            form.save()
+            return redirect('company:home')
+    return render(request, 'company/addpost.html', {'form': form})
 
 
 def viewProfile(request):
@@ -34,3 +55,10 @@ def signup(request):
 def companyLogout(request):
     logout(request)
     return redirect('company:login')
+
+
+def getCurrentCompany(request):
+    try:
+        return Company.objects.get(user=request.user)
+    except Company.DoesNotExist:
+        return None

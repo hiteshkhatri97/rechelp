@@ -3,11 +3,19 @@
 {% block header %}
 {% if user.is_authenticated %}
 <a class="nav-link" href="{% url 'company:logout' %}">LOGOUT</a>
-{% endif %}
 <a class="nav-link" href="{% url 'company:profile' %}">PROFILE</a>
+<a class="nav-link" href="{% url 'company:addpost' %}">ADD POST</a>
+{% endif %}
+
 
 {% endblock header %}
 
 {% block content %}
+
+{% for post in posts %}
+
+<p>{{ post.postTechnology }}</p>
+
+{% endfor %}
 
 {% endblock content %}
