@@ -48,4 +48,4 @@ def profileForm(request, user_type):
 
             form.save()
             return redirect(user_type + ':home')
-    return render(request, user_type + '/profile.html', {'form': form})
+    return render(request, user_type + '/editprofile.html', {'form': form})

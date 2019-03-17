@@ -13,8 +13,12 @@ def home(request):
     return render(request, 'company/home.html')
 
 
+def viewProfile(request):
+    return render(request, 'company/profile.html')
+
+
 @login_required(login_url="company:login")
-def profile(request):
+def editProfile(request):
     return profileForm(request, 'company')
 
 

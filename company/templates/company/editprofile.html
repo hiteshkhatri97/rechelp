@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block header %}
+{% if user.is_authenticated %}
+<a class="nav-link" href="{% url 'company:logout'  %}">LOGOUT</a>
+{% endif %}
+<a class="nav-link" href="{% url 'company:home'  %}">HOME</a>
+<a class="nav-link" href="{% url 'company:profile'  %}">PROFILE</a>
+
+{% endblock header %}
+{% block content %}
+
+<form method="POST" action="">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">SAVE</button>
+    <button type="reset" class="btn btn-danger">RESET</button>
+</form>
+
+{% endblock content %}
