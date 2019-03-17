@@ -10,4 +10,10 @@
 
 {% block content %}
 
+{% for post in posts %}
+
+<p>{{ post.company.name }} requies {{ post.postTechnology }} developer expiring on {{ post.postExpiringDate }} </p>
+
+{% endfor %}
+
 {% endblock content %}

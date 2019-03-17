@@ -21,6 +21,7 @@ class Student(models.Model):
     iosMarks = models.SmallIntegerField(default='0')
     javaMarks = models.SmallIntegerField(default='0')
     pythonMarks = models.SmallIntegerField(default='0')
+    # advancedJavaMarks = models.SmallIntegerField(default='0')
     fieldsOfInterest = models.CharField(default='', max_length=200)
     profileCompleted = models.BooleanField(default=False)
 

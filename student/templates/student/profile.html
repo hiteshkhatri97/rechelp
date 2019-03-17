@@ -8,5 +8,14 @@
 
 {% endblock header %}
 {% block content %}
-<p>work in progress</p>
+{% if student.profileCompleted %}
+
+{% for field in fields %}
+<p><span>{{ field.0 }}</span> : <span>{{ field.1 }}</span></p>
+{% endfor %}
+
+{% else %}
+<p>Please complete your profile</p>
+{% endif %}
+
 {% endblock content %}

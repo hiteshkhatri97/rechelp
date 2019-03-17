@@ -35,7 +35,10 @@ def addPost(request):
 
 
 def viewProfile(request):
-    return render(request, 'company/profile.html')
+    compay = Company.objects.filter(user=request.user)
+    fields = [(field.name, getattr(student[0], field.name))
+              for field in Company._meta.get_fields() if field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
+    return render(request, 'company/profile.html', {'company': company[0], 'fields': fields})
 
 
 @login_required(login_url="company:login")
