@@ -11,7 +11,11 @@
 {% if student.profileCompleted %}
 
 {% for field in fields %}
+{% if 'Marks' in field.0 %}
 <p><span>{{ field.0 }}</span> : <span>{{ field.1 }}</span></p>
+{% else %}
+<p><span>{{ field.0 }}</span> : <span>{{ field.1 }}</span></p>
+{% endif %}
 {% endfor %}
 
 {% else %}

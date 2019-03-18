@@ -12,10 +12,22 @@
 
 {% block content %}
 
-{% for post in posts %}
+{% if posts %}
+{% for index, post in posts %}
 
-<p>{{ post.postTechnology }}</p>
+<p><span>{{ index|add:"1" }}. {{ post.postTechnology }} expiring on {{ post.postExpiringDate }} </span></p>
 
+<form action="#" method="GET" class="form-inline">
+    <input type="hidden" value="{{ post.id }}" name="postid" />
+    <input type="submit" class="btn btn-danger" value="delete" name="delete">
+</form>
+<br>
+<form action="#" method="GET" class="form-inline">
+    <input type="submit" class="btn btn-info" value="applied students" name="delete">
+</form>
+<br>
 {% endfor %}
-
+{% else %}
+<p>no active posts</p>
+{% endif %}
 {% endblock content %}

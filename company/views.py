@@ -7,14 +7,22 @@ from django.contrib.auth.decorators import login_required
 from reusables.reusables import loginForm, signupForm, profileForm
 from post.models import addPostForm, Post
 from . models import Company
+import datetime
 User = get_user_model()
 
 
 @login_required(login_url="company:login")
 def home(request):
+
     currentCompanyPosts = Post.objects.filter(
         company=getCurrentCompany(request))
-    return render(request, 'company/home.html', {'posts': currentCompanyPosts})
+    postDatesSet = set([post.postDate for post in currentCompanyPosts])
+
+    if request.GET.get('delete') == 'delete':
+        deletePost(request.GET.get('postid'))
+        return redirect('company:home')
+
+    return render(request, 'company/home.html', {'posts': enumerate(currentCompanyPosts), 'postDatesSet': postDatesSet})
 
 
 @login_required(login_url="company:login")
@@ -35,15 +43,17 @@ def addPost(request):
 
 
 def viewProfile(request):
-    compay = Company.objects.filter(user=request.user)
-    fields = [(field.name, getattr(student[0], field.name))
-              for field in Company._meta.get_fields() if field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
+    company = Company.objects.filter(user=request.user)
+    fields = [(field.name, getattr(company[0], field.name))
+              for field in Company._meta.get_fields() if field.name != 'post' and field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
     return render(request, 'company/profile.html', {'company': company[0], 'fields': fields})
 
 
 @login_required(login_url="company:login")
 def editProfile(request):
-    return profileForm(request, 'company')
+    company = Company.objects.filter(user=request.user)
+    instance = company[0] if company[0].profileCompleted else None
+    return profileForm(request, 'company', instance)
 
 
 def companyLogin(request):
@@ -65,3 +75,7 @@ def getCurrentCompany(request):
         return Company.objects.get(user=request.user)
     except Company.DoesNotExist:
         return None
+
+
+def deletePost(postId):
+    Post.objects.filter(id=postId).delete()

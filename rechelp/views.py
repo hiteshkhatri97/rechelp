@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from pymongo import MongoClient
 from django.conf import settings
 
+
 def appliedStudentsTest(request):
 
     try:
@@ -13,38 +14,35 @@ def appliedStudentsTest(request):
 
     # database
     db = conn.rechelp
-    db=conn['rechelp']
+    db = conn['rechelp']
 
     # Created or Switched to collection names: my_gfg_collection
     collection = db.post_post
-    collection=db['post_post']
+    collection = db['post_post']
 
-    
-    
     result = collection.update_many(
         {"id": 1},
-        {"$set": {"appliedStudents": ['1519bece30060']},}
+        {"$set": {"appliedStudents": ['1519bece30060']}, }
     )
 
-
     result1 = collection.find({"id": 1}, {"appliedStudents": 1})
-    
-    
+
     newStudent = '1519bece30038'
-    newList=[]
+    newList = []
     # Print the new record
     cursor = collection.find()
     for record in result1:
         newList = record['appliedStudents']
-    print('nl',newList)
+    print('nl', newList)
     newList.append(newStudent)
-    print('nl',newList)
+    print('nl', newList)
     result = collection.update_many(
         {"id": 1},
         {"$set": {"appliedStudents": newList}, }
     )
 
-    return HttpResponse("<p>" +str(result1)+"</p>")
+    return HttpResponse("<p>" + str(result1) + "</p>")
+
 
 def index(request):
     if request.user.is_authenticated:

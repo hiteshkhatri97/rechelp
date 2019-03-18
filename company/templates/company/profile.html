@@ -8,5 +8,7 @@
 
 {% endblock header %}
 {% block content %}
-<p>work in progress</p>
+{% for field in fields %}
+<p><span>{{ field.0 }}</span> : <span>{{ field.1 }}</span></p>
+{% endfor %}
 {% endblock content %}

@@ -10,9 +10,18 @@
 
 {% block content %}
 
+{% for company in companys %}
+<h5>{{ company.name }}</h5>
 {% for post in posts %}
-
-<p>{{ post.company.name }} requies {{ post.postTechnology }} developer expiring on {{ post.postExpiringDate }} </p>
+{% if post.company == company %}
+<p>{{ post.postTechnology }} developer id required before {{ post.postExpiringDate }} </p>
+<form action="#" method="GET" class="form-inline">
+    <input type="hidden" value="{{ student }}" name="studentid" />
+    <input type="hidden" value="{{ post.id }}" name="postid" />
+    <input type="submit" class="btn btn-warning" value="apply" name="apply">
+</form>
+{% endif %}
+{% endfor %}
 
 {% endfor %}
 
