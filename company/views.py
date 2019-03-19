@@ -4,9 +4,10 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from reusables.reusables import loginForm, signupForm, profileForm
+from reusables.reusables import loginForm, signupForm, profileForm, connectDatabase
 from post.models import addPostForm, Post
 from . models import Company
+from student.models import Student
 import datetime
 User = get_user_model()
 
@@ -21,7 +22,9 @@ def home(request):
     if request.GET.get('delete') == 'delete':
         deletePost(request.GET.get('postid'))
         return redirect('company:home')
-
+    if request.GET.get('appliedstudents') == 'applied students':
+        collection = connectDatabase()
+        # logic for getting applied students and passing it to display
     return render(request, 'company/home.html', {'posts': enumerate(currentCompanyPosts), 'postDatesSet': postDatesSet})
 
 
@@ -37,7 +40,13 @@ def addPost(request):
             request.POST)
         if form.is_valid():
 
-            form.save()
+            newPost = form.save()
+
+            collection = connectDatabase()
+
+            result = collection.update(
+                {'id': int(newPost.id)}, {'$set': {'appliedStudents': []}})
+
             return redirect('company:home')
     return render(request, 'company/addpost.html', {'form': form})
 

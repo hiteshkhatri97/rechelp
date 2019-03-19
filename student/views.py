@@ -4,12 +4,14 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from reusables.reusables import loginForm, signupForm, profileForm
+from reusables.reusables import loginForm, signupForm, profileForm, connectDatabase
 from post.models import Post
 from company.models import Company
 from . models import Student
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import REDIRECT_FIELD_NAME
+from pymongo import MongoClient
+import datetime
 
 User = get_user_model()
 
@@ -18,11 +20,14 @@ User = get_user_model()
 def home(request):
     posts = Post.objects.all()
     companys = Company.objects.all()
-
+    student = Student.objects.filter(user=request.user)
+    appliedPosts = getAppliedPosts(student[0].id)
     if request.GET.get('apply') == 'apply':
-        print(request.GET.get('studentid'), request.GET.get('postid'))
-
-    return render(request, 'student/home.html', {'posts': posts, 'companys': companys, 'student': request.user.id})
+        appliedStudents(request.GET.get('postid'),
+                        request.GET.get('studentid'))
+        return redirect('student:home')
+    return render(request, 'student/home.html', {'posts': posts, 'companys': companys, 'student': student[0].id, 'appliedPosts':
+                                                 appliedPosts, 'today': datetime.date.today()})
 
 
 def viewProfile(request):
@@ -54,38 +59,22 @@ def studentLogout(request):
 
 
 def appliedStudents(postId, studentId):
-    try:
-        conn = MongoClient()
-        print(conn)
-        print("Connected successfully!!!")
-    except:
-        print("Could not connect to MongoDB")
 
-    # database
-    db = conn.rechelp
-    db = conn['rechelp']
+    collection = connectDatabase()
 
-    # Created or Switched to collection names: my_gfg_collection
-    collection = db.post_post
-    collection = db['post_post']
+    cursor = list(collection.find({"id": int(postId)}, {
+                  "appliedStudents": 1, '_id': 0}))[0]['appliedStudents']
 
-    result = collection.update_many(
-        {"id": 1},
-        {"$set": {"appliedStudents": ['1519bece30060']}, }
-    )
+    if int(studentId) not in cursor:
+        cursor.append(int(studentId))
 
-    result1 = collection.find({"id": 1}, {"appliedStudents": 1})
+    result = collection.update(
+        {'id': int(postId)}, {'$set': {'appliedStudents': cursor}})
 
-    newStudent = '1519bece30038'
-    newList = []
-    # Print the new record
-    cursor = collection.find()
-    for record in result1:
-        newList = record['appliedStudents']
-    print('nl', newList)
-    newList.append(newStudent)
-    print('nl', newList)
-    result = collection.update_many(
-        {"id": 1},
-        {"$set": {"appliedStudents": newList}, }
-    )
+
+def getAppliedPosts(studentId):
+    collection = connectDatabase()
+
+    cursor = [id['id'] for id in list(collection.find({'appliedStudents': int(studentId)}, {
+        "id": 1, '_id': 0}))]
+    return cursor

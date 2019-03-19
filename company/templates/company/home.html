@@ -23,7 +23,8 @@
 </form>
 <br>
 <form action="#" method="GET" class="form-inline">
-    <input type="submit" class="btn btn-info" value="applied students" name="delete">
+    <input type="hidden" value="{{ post.id }}" name="postid" />
+    <input type="submit" class="btn btn-info" value="applied students" name="appliedstudents">
 </form>
 <br>
 {% endfor %}

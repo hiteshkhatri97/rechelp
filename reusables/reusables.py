@@ -3,6 +3,7 @@ from student.models import StudentLoginForm, StudentCreationForm, StudentProfile
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth import get_user_model
+from pymongo import MongoClient
 User = get_user_model()
 
 
@@ -57,3 +58,17 @@ def profileForm(request, user_type, instance):
             form.save()
             return redirect(user_type + ':home')
     return render(request, user_type + '/editprofile.html', {'form': form})
+
+
+def connectDatabase():
+    conn = None
+    try:
+        conn = MongoClient()
+        print("Connected successfully!!!")
+    except:
+        print("Could not connect to MongoDB")
+
+    db = conn.rechelp
+    collection = db.post_post
+
+    return collection
