@@ -12,9 +12,13 @@
 
 {% for company in companys %}
 <h5>{{ company.name }}</h5>
+<form action="#" method="GET" class="form-inline">
+    <input type="hidden" value="{{ company.id }}" name="companyid" />
+    <input type="submit" class="btn btn-info" value="viewprofile" name="viewprofile">
+</form>
 {% for post in posts %}
 {% if post.company == company %}
-<p>{{ post.postTechnology }} developer id required before {{ post.postExpiringDate }} </p>
+<p>{{ post.postTechnology }} developer is required before {{ post.postExpiringDate }} </p>
 <form action="" method="GET" class="form-inline">
     <input type="hidden" value="{{ student }}" name="studentid" />
     <input type="hidden" value="{{ post.id }}" name="postid" />
@@ -28,6 +32,21 @@
     <input type="submit" class="btn btn-warning" value="apply" name="apply">
     {% endif %}
 </form>
+
+<form action="" method="GET" class="form-inline">
+    <input type="hidden" value="{{ student }}" name="studentid" />
+    <input type="hidden" value="{{ post.id }}" name="postid" />
+    {% if post.id in appliedPosts %}
+    {% if post.postExpiringDate >= today %}
+    <input type="submit" class="btn btn-warning" value="applied" name="applied" disabled>
+    {% else %}
+    <input type="submit" class="btn btn-warning" value="show result" name="show result">
+    {% endif %}
+    {% else %}
+    <input type="submit" class="btn btn-warning" value="apply" name="apply">
+    {% endif %}
+</form>
+
 {% endif %}
 {% endfor %}
 

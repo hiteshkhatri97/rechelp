@@ -22,6 +22,10 @@ def home(request):
     companys = Company.objects.all()
     student = Student.objects.filter(user=request.user)
     appliedPosts = getAppliedPosts(student[0].id)
+
+    if request.GET.get('viewprofile') == 'viewprofile':
+        return viewOutsideProfile(request, int(request.GET.get('companyid')))
+
     if request.GET.get('apply') == 'apply':
         appliedStudents(request.GET.get('postid'),
                         request.GET.get('studentid'))
@@ -78,3 +82,10 @@ def getAppliedPosts(studentId):
     cursor = [id['id'] for id in list(collection.find({'appliedStudents': int(studentId)}, {
         "id": 1, '_id': 0}))]
     return cursor
+
+
+def viewOutsideProfile(request, companyid):
+    company = Company.objects.filter(id=companyid)
+    fields = [(field.name, getattr(company[0], field.name))
+              for field in Company._meta.get_fields() if field.name != 'post' and field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
+    return render(request, 'company/profile.html', {'company': company[0], 'fields': fields})

@@ -23,8 +23,11 @@ def home(request):
         deletePost(request.GET.get('postid'))
         return redirect('company:home')
     if request.GET.get('appliedstudents') == 'applied students':
-        collection = connectDatabase()
-        # logic for getting applied students and passing it to display
+        return appliedStudents(request)
+
+    if request.GET.get('viewprofile') == 'viewprofile':
+        return viewOutsideProfile(request, int(request.GET.get('studentid')))
+
     return render(request, 'company/home.html', {'posts': enumerate(currentCompanyPosts), 'postDatesSet': postDatesSet})
 
 
@@ -88,3 +91,28 @@ def getCurrentCompany(request):
 
 def deletePost(postId):
     Post.objects.filter(id=postId).delete()
+
+
+def appliedStudents(request):
+    postid = request.GET.get('postid')
+    print(postid, type(postid))
+    post = Post.objects.filter(id=postid)
+    collection = connectDatabase()
+    result = list(collection.find({'id': int(postid)}, {
+        'appliedStudents': 1, '_id': 0}))[0]['appliedStudents']
+    print(result)
+    students = []
+    if len(result) > 0:
+        print('in if')
+        for id in result:
+            print(Student.objects.filter(id=int(id))[0])
+        students = [Student.objects.filter(id=int(id))[0] for id in result]
+    print(students)
+    return render(request, 'company/appliedstudents.html', {'students': students})
+
+
+def viewOutsideProfile(request, studentid):
+    student = Student.objects.filter(id=studentid)
+    fields = [(field.name, getattr(student[0], field.name))
+              for field in Student._meta.get_fields() if field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
+    return render(request, 'student/profile.html', {'student': student[0], 'fields': fields})
