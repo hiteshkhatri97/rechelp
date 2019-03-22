@@ -32,19 +32,12 @@
     <input type="submit" class="btn btn-warning" value="apply" name="apply">
     {% endif %}
 </form>
-
+<br>
 <form action="" method="GET" class="form-inline">
+    <input type="hidden" value="{{ company.name }}" name="companyname" />
     <input type="hidden" value="{{ student }}" name="studentid" />
-    <input type="hidden" value="{{ post.id }}" name="postid" />
-    {% if post.id in appliedPosts %}
-    {% if post.postExpiringDate >= today %}
-    <input type="submit" class="btn btn-warning" value="applied" name="applied" disabled>
-    {% else %}
-    <input type="submit" class="btn btn-warning" value="show result" name="show result">
-    {% endif %}
-    {% else %}
-    <input type="submit" class="btn btn-warning" value="apply" name="apply">
-    {% endif %}
+    <input type="hidden" value="{{ post.postTechnology }}" name="posttechnology" />
+    <input type="submit" class="btn btn-warning" value="predict" name="predict">
 </form>
 
 {% endif %}

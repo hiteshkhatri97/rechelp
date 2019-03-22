@@ -15,13 +15,14 @@ class Student(models.Model):
     lastName = models.CharField(default='', max_length=50)
     enrollmentNumber = models.CharField(default='', max_length=20)
     picture = models.ImageField(
-        default='default.png', upload_to='profile_pics')
+        default='default.png', upload_to='profile_pics', blank=True, null=True)
     wtMarks = models.SmallIntegerField(default='0')
     androidMarks = models.SmallIntegerField(default='0')
     iosMarks = models.SmallIntegerField(default='0')
     javaMarks = models.SmallIntegerField(default='0')
     pythonMarks = models.SmallIntegerField(default='0')
-    # advancedJavaMarks = models.SmallIntegerField(default='0')
+    cpi = models.FloatField(default='0')
+    aptitude = models.SmallIntegerField(default='0')
     fieldsOfInterest = models.CharField(default='', max_length=200)
     profileCompleted = models.BooleanField(default=False)
 
@@ -64,12 +65,18 @@ class StudentProfileForm(forms.ModelForm):
     class Meta:
         model = Student
         fields = ['firstName', 'lastName',
-                  'enrollmentNumber', 'picture', 'wtMarks', 'androidMarks', 'iosMarks', 'javaMarks', 'pythonMarks', 'fieldsOfInterest', 'user', 'profileCompleted']
+                  'enrollmentNumber', 'picture', 'cpi', 'aptitude', 'wtMarks', 'androidMarks', 'iosMarks', 'javaMarks', 'pythonMarks', 'fieldsOfInterest', 'user', 'profileCompleted']
 
     def __init__(self, *args, **kwargs):
         super(StudentProfileForm, self).__init__(*args, **kwargs)
         self.fields['user'].widget = HiddenInput()
         self.fields['profileCompleted'].widget = HiddenInput()
+
+    def save(self, commit=True):
+        student = super(StudentProfileForm, self).save(commit=False)
+        if commit:
+            student.save()
+        return student
 
 
 # class AppliedStudentForm(ModelForm):

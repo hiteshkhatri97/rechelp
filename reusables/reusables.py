@@ -42,20 +42,30 @@ def signupForm(request, user_type):
 
 def profileForm(request, user_type, instance):
     form = None
+    print('form none')
     formInitialData = {'user': request.user, 'profileCompleted': True}
+    studentFormInitialData = {'user': request.user,
+                              'profileCompleted': True, 'picture': 'default.png'}
     if instance is None:
+        print('instance none')
         form = StudentProfileForm(
-            initial=formInitialData) if user_type == 'student' else CompanyProfileForm(initial=formInitialData)
+            initial=studentFormInitialData) if user_type == 'student' else CompanyProfileForm(initial=formInitialData)
+        print('form with initial data')
     else:
+        print('instance')
         form = StudentProfileForm(
-            initial=formInitialData, instance=instance) if user_type == 'student' else CompanyProfileForm(initial=formInitialData, instance=instance)
+            initial=studentFormInitialData, instance=instance) if user_type == 'student' else CompanyProfileForm(initial=formInitialData, instance=instance)
+        print('form with instance data')
 
     if request.method == 'POST':
+        print('post request')
         form = StudentProfileForm(
-            request.POST) if user_type == 'student' else CompanyProfileForm(request.POST)
+            request.POST, instance=request.user) if user_type == 'student' else CompanyProfileForm(request.POST, instance=request.user)
+        print(request.POST)
         if form.is_valid():
-
+            print('valid form')
             form.save()
+            print('form saved')
             return redirect(user_type + ':home')
     return render(request, user_type + '/editprofile.html', {'form': form})
 
