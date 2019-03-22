@@ -11,19 +11,27 @@
 {% block content %}
 {% if student.profileCompleted %}
 
-
-
 <div class="row align-items-center">
-    <img class="img-thumbnail rounded float-right" src="{{ student.picture.url }}" alt="Card image" style="max-width: 200px; max-height: 200px; ">
+    <img class="img-thumbnail rounded float-left mr-5 " src="{{ student.picture.url }}" alt="Card image" style="max-width: 200px; max-height: 200px;">
+    <h1 class="display-4 ml-5">{{ student.firstName }} {{ student.lastName }}</h1>
 </div>
+
+<p class="lead mt-5">Details</p>
 {% for detail in details %}
-
-
 <hr class="my-4">
-<p class="lead"><span>{{ detail.0|title }}</span> : <span>{{ detail.1 }}</span></p>
+<p><span>{{ detail.0|title }}</span> : <span>{{ detail.1 }}</span></p>
 {% endfor %}
+
+<p class="lead mt-5">Marks</p>
+{% for mark in marks %}
+<hr class="my-4">
+<p><span>{{ mark.0|title }}</span> : <span>{{ mark.1 }}</span></p>
+{% endfor %}
+
 {% else %}
-<p>Please complete your profile</p>
+<div class="alert alert-primary mt-5" role="alert">
+    Please complete your profile
+</div>
 {% endif %}
 
 {% endblock content %}

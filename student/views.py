@@ -47,10 +47,10 @@ def home(request):
 def viewProfile(request):
     student = Student.objects.filter(user=request.user)
     details = [(field.name, getattr(student[0], field.name))
-               for field in Student._meta.get_fields() if field.name == 'enrollmentNumber' and field.name == 'fieldsfieldsOfInterestfieldsOfInterestOfInterest']
+               for field in Student._meta.get_fields() if field.name == 'enrollmentNumber' or field.name == 'fieldsOfInterest']
     print(details)
     marks = [(field.name.replace("Marks",""), getattr(student[0], field.name)) for field in Student._meta.get_fields() if field.name ==
-             'wtMarks' and field.name == 'androidMarks' and field.name == 'iosMarks' and field.name == 'javaMarks' and field.name == 'pythonMarks' and field.name == 'cpi' and field.name == 'aptitude']
+             'wtMarks' or field.name == 'androidMarks' or field.name == 'iosMarks' or field.name == 'javaMarks' or field.name == 'pythonMarks' or field.name == 'cpi' or field.name == 'aptitude']
     print(marks)
     return render(request, 'student/profile.html', {'marks': marks, 'details': details, 'student': student[0]})
 

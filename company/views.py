@@ -112,6 +112,8 @@ def appliedStudents(request):
 
 def viewOutsideProfile(request, studentid):
     student = Student.objects.filter(id=studentid)
-    fields = [(field.name, getattr(student[0], field.name))
-              for field in Student._meta.get_fields() if field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
-    return render(request, 'company/outsideprofile.html', {'student': student[0], 'fields': fields})
+    details = [(field.name, getattr(student[0], field.name))
+               for field in Student._meta.get_fields() if field.name == 'enrollmentNumber' or field.name == 'fieldsOfInterest']
+    marks = [(field.name.replace("Marks", ""), getattr(student[0], field.name)) for field in Student._meta.get_fields() if field.name ==
+             'wtMarks' or field.name == 'androidMarks' or field.name == 'iosMarks' or field.name == 'javaMarks' or field.name == 'pythonMarks' or field.name == 'cpi' or field.name == 'aptitude']
+    return render(request, 'company/outsideprofile.html', {'marks': marks, 'details': details, 'student': student[0]})
