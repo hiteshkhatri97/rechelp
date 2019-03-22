@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block header %}
 {% if user.is_authenticated %}
 <a class="nav-link" href="{% url 'student:logout'  %}">LOGOUT</a>
@@ -11,8 +12,11 @@
 {% if student.profileCompleted %}
 
 {% for field in fields %}
-{% if 'Marks' in field.0 %}
+{% if field.0 == "picture" %}
+<img src="{{ field.1.url }}">
+{% elif 'Marks' in field.0 %}
 <p><span>{{ field.0 }}</span> : <span>{{ field.1 }}</span></p>
+
 {% else %}
 <p><span>{{ field.0 }}</span> : <span>{{ field.1 }}</span></p>
 {% endif %}
