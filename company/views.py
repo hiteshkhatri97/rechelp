@@ -64,7 +64,7 @@ def viewProfile(request):
 @login_required(login_url="company:login")
 def editProfile(request):
     company = Company.objects.filter(user=request.user)
-    instance = company[0] if company[0].profileCompleted else None
+    instance = company[0] 
     return profileForm(request, 'company', instance)
 
 
@@ -100,7 +100,6 @@ def appliedStudents(request):
     collection = connectDatabase()
     result = list(collection.find({'id': int(postid)}, {
         'appliedStudents': 1, '_id': 0}))[0]['appliedStudents']
-    print(result)
     students = []
     if len(result) > 0:
         print('in if')
@@ -115,4 +114,4 @@ def viewOutsideProfile(request, studentid):
     student = Student.objects.filter(id=studentid)
     fields = [(field.name, getattr(student[0], field.name))
               for field in Student._meta.get_fields() if field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
-    return render(request, 'student/profile.html', {'student': student[0], 'fields': fields})
+    return render(request, 'company/outsideprofile.html', {'student': student[0], 'fields': fields})

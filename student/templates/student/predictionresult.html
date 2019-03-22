@@ -1,16 +1,31 @@
 {% extends "base.html" %}
 
 {% block header %}
+<a class="nav-link disabled" href="#">STUDENT</a>
+
+<a class="nav-link" href="{% url 'student:profile' %}">PROFILE</a>
 {% if user.is_authenticated %}
 <a class="nav-link" href="{% url 'student:logout' %}">LOGOUT</a>
 {% endif %}
-<a class="nav-link" href="{% url 'student:profile' %}">PROFILE</a>
-
 {% endblock header %}
 
 {% block content %}
-<p>{{ message }}</p>
-<p>{{ errormessage }}</p>
+
+{% if message %}
+<div class="alert alert-success mt-3" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+{% if errormessage %}
+<div class="alert alert-danger mt-3" role="alert">
+    {{ errormessage }}
+</div>
+{% endif %}
+<!-- <p>{{ message }}</p>
+<div class="alert alert-danger" role="alert">
+    {{ errormessage }}
+</div>
+<p>{{ errormessage }}</p> -->
 
 
 {% endblock content %}

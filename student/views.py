@@ -46,15 +46,19 @@ def home(request):
 
 def viewProfile(request):
     student = Student.objects.filter(user=request.user)
-    fields = [(field.name, getattr(student[0], field.name))
-              for field in Student._meta.get_fields() if field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
-    return render(request, 'student/profile.html', {'student': student[0], 'fields': fields})
+    details = [(field.name, getattr(student[0], field.name))
+               for field in Student._meta.get_fields() if field.name == 'enrollmentNumber' and field.name == 'fieldsfieldsOfInterestfieldsOfInterestOfInterest']
+    print(details)
+    marks = [(field.name.replace("Marks",""), getattr(student[0], field.name)) for field in Student._meta.get_fields() if field.name ==
+             'wtMarks' and field.name == 'androidMarks' and field.name == 'iosMarks' and field.name == 'javaMarks' and field.name == 'pythonMarks' and field.name == 'cpi' and field.name == 'aptitude']
+    print(marks)
+    return render(request, 'student/profile.html', {'marks': marks, 'details': details, 'student': student[0]})
 
 
 @login_required(login_url="student:login")
 def editProfile(request):
     student = Student.objects.filter(user=request.user)
-    instance = student[0] if student[0].profileCompleted else None
+    instance = student[0]
     return profileForm(request, 'student', instance)
 
 
@@ -98,7 +102,7 @@ def viewOutsideProfile(request, companyid):
     company = Company.objects.filter(id=companyid)
     fields = [(field.name, getattr(company[0], field.name))
               for field in Company._meta.get_fields() if field.name != 'post' and field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
-    return render(request, 'company/profile.html', {'company': company[0], 'fields': fields})
+    return render(request, 'student/outsideprofile.html', {'company': company[0], 'fields': fields})
 
 
 def predict(request):

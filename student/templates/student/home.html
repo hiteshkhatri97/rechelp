@@ -1,44 +1,56 @@
 {% extends "base.html" %}
 
 {% block header %}
+<a class="nav-link disabled" href="#">STUDENT</a>
+
+<a class="nav-link" href="{% url 'student:profile' %}">PROFILE</a>
 {% if user.is_authenticated %}
 <a class="nav-link" href="{% url 'student:logout' %}">LOGOUT</a>
 {% endif %}
-<a class="nav-link" href="{% url 'student:profile' %}">PROFILE</a>
 
 {% endblock header %}
 
 {% block content %}
 
 {% for company in companys %}
-<h5>{{ company.name }}</h5>
-<form action="#" method="GET" class="form-inline">
-    <input type="hidden" value="{{ company.id }}" name="companyid" />
-    <input type="submit" class="btn btn-info" value="viewprofile" name="viewprofile">
-</form>
+<h5 class="mt-3 mb-3">{{ company.name }} <form action="#" method="GET" class="form-inline" style="display:inline-block;">
+        <input type="hidden" value="{{ company.id }}" name="companyid" />
+        <input type="submit" class="btn btn-info" value="viewprofile" name="viewprofile">
+    </form>
+</h5>
 {% for post in posts %}
+
 {% if post.company == company %}
-<p>{{ post.postTechnology }} developer is required before {{ post.postExpiringDate }} </p>
-<form action="" method="GET" class="form-inline">
-    <input type="hidden" value="{{ student }}" name="studentid" />
-    <input type="hidden" value="{{ post.id }}" name="postid" />
-    {% if post.id in appliedPosts %}
-    {% if post.postExpiringDate >= today %}
-    <input type="submit" class="btn btn-warning" value="applied" name="applied" disabled>
-    {% else %}
-    <input type="submit" class="btn btn-warning" value="show result" name="show result">
-    {% endif %}
-    {% else %}
-    <input type="submit" class="btn btn-warning" value="apply" name="apply">
-    {% endif %}
-</form>
-<br>
-<form action="" method="GET" class="form-inline">
-    <input type="hidden" value="{{ company.name }}" name="companyname" />
-    <input type="hidden" value="{{ student }}" name="studentid" />
-    <input type="hidden" value="{{ post.postTechnology }}" name="posttechnology" />
-    <input type="submit" class="btn btn-warning" value="predict" name="predict">
-</form>
+<div class="card mt-3 mb-3">
+    <div class="card-body ">
+        <h5 class="card-title">{{ post.postTechnology|upper }} developer required</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Expires : {{ post.postExpiringDate }}</h6>
+        <a href="#" class="btn">
+            <form action="" method="GET" class="form-inline">
+                <input type="hidden" value="{{ student }}" name="studentid" />
+                <input type="hidden" value="{{ post.id }}" name="postid" />
+                {% if post.id in appliedPosts %}
+                {% if post.postExpiringDate >= today %}
+                <input type="submit" class="btn btn-warning" value="applied" name="applied" disabled>
+                {% else %}
+                <input type="submit" class="btn btn-warning" value="show result" name="show result">
+                {% endif %}
+                {% else %}
+                <input type="submit" class="btn btn-warning" value="apply" name="apply">
+                {% endif %}
+            </form>
+        </a>
+        <a href="#" class="btn">
+            <form action="" method="GET" class="form-inline">
+                <input type="hidden" value="{{ company.name }}" name="companyname" />
+                <input type="hidden" value="{{ student }}" name="studentid" />
+                <input type="hidden" value="{{ post.postTechnology }}" name="posttechnology" />
+                <input type="submit" class="btn btn-warning" value="predict" name="predict">
+            </form>
+        </a>
+    </div>
+</div>
+
 
 {% endif %}
 {% endfor %}

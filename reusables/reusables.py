@@ -49,7 +49,7 @@ def profileForm(request, user_type, instance):
     if instance is None:
         print('instance none')
         form = StudentProfileForm(
-            initial=studentFormInitialData) if user_type == 'student' else CompanyProfileForm(initial=formInitialData)
+            initial=studentFormInitialData, instance=instance) if user_type == 'student' else CompanyProfileForm(initial=formInitialData, instance=instance)
         print('form with initial data')
     else:
         print('instance')
@@ -60,7 +60,7 @@ def profileForm(request, user_type, instance):
     if request.method == 'POST':
         print('post request')
         form = StudentProfileForm(
-            request.POST, instance=request.user) if user_type == 'student' else CompanyProfileForm(request.POST, instance=request.user)
+            request.POST, instance=instance) if user_type == 'student' else CompanyProfileForm(request.POST, instance=instance)
         print(request.POST)
         if form.is_valid():
             print('valid form')
