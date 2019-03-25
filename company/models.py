@@ -23,6 +23,27 @@ class Company(models.Model):
 
 class CompanyCreationForm(UserCreationForm):
     userType = forms.CharField(required=False, initial="company")
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Username',
+        }
+    ))
+    password1 = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Password',
+        }
+    ))
+    password2 = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Password Confirmation',
+        }
+    ))
 
     class Meta:
         model = User
@@ -41,6 +62,20 @@ class CompanyCreationForm(UserCreationForm):
 
 class CompanyLoginForm(AuthenticationForm):
     userType = forms.CharField(required=False, initial="company")
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Username',
+        }
+    ))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Password',
+        }
+    ))
 
     class Meta:
         model = User

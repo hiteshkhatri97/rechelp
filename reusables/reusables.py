@@ -60,7 +60,7 @@ def profileForm(request, user_type, instance):
     if request.method == 'POST':
         print('post request')
         form = StudentProfileForm(
-            request.POST, instance=instance) if user_type == 'student' else CompanyProfileForm(request.POST, instance=instance)
+            request.POST, request.FILES,instance=instance) if user_type == 'student' else CompanyProfileForm(request.POST, instance=instance)
         print(request.POST)
         if form.is_valid():
             print('valid form')

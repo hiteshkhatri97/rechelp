@@ -32,7 +32,27 @@ class Student(models.Model):
 
 class StudentCreationForm(UserCreationForm):
     userType = forms.CharField(required=False, initial="student")
-
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Username',
+        }
+    ))
+    password1 = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Password',
+        }
+    ))
+    password2 = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Password Confirmation',
+        }
+    ))
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2', 'userType']
@@ -50,6 +70,21 @@ class StudentCreationForm(UserCreationForm):
 
 class StudentLoginForm(AuthenticationForm):
     userType = forms.CharField(required=False, initial="student")
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Username',
+        }
+    ))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class':'form-control',
+            'required':'required',
+            'placeholder':'Password',
+        }
+    ))
+    
 
     class Meta:
         model = User
