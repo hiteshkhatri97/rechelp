@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth import get_user_model
 from pymongo import MongoClient
+from django.contrib import messages
 User = get_user_model()
 
 
@@ -16,9 +17,13 @@ def loginForm(request, user_type):
         if form.is_valid():
             user = form.get_user()
             if user and user.userType == user_type:
-                # TODO: SEND A NICE MESSAGE IF SOMEONE TRIES TO LOGIN WITH CREDENTIALS OF DIFFERENT USER TYPE
+                # TODO: DONE
                 login(request, user)
                 return redirect(user_type + ':home')
+            else:
+                messages.success(request, "Error")
+    print("helooooooooo")
+    print(form)
 
     return render(request, user_type + '/login.html', {'form': form})
 
@@ -58,7 +63,7 @@ def profileForm(request, user_type, instance):
         print('form with instance data')
 
     if request.method == 'POST':
-        print('post request')
+        print(instance)
         form = StudentProfileForm(
             request.POST, request.FILES,instance=instance) if user_type == 'student' else CompanyProfileForm(request.POST, instance=instance)
         print(request.POST)
@@ -67,6 +72,9 @@ def profileForm(request, user_type, instance):
             form.save()
             print('form saved')
             return redirect(user_type + ':home')
+    # print("helloooooo")
+    # print(form)
+    # print("byeeeeeee")
     return render(request, user_type + '/editprofile.html', {'form': form})
 
 

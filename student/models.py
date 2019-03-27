@@ -96,7 +96,80 @@ class StudentLoginForm(AuthenticationForm):
 
 
 class StudentProfileForm(forms.ModelForm):
+    firstName=forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    lastName=forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    enrollmentNumber=forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    cpi=forms.CharField(widget=forms.TextInput(
 
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    aptitude=forms.CharField(widget=forms.TextInput(
+
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    wtMarks=forms.CharField(widget=forms.TextInput(
+
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    androidMarks=forms.CharField(widget=forms.TextInput(
+
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    iosMarks=forms.CharField(widget=forms.TextInput(
+
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    javaMarks=forms.CharField(widget=forms.TextInput(
+
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    pythonMarks=forms.CharField(widget=forms.TextInput(
+
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    fieldsOfInterest=forms.CharField(widget=forms.TextInput(
+
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
     class Meta:
         model = Student
         fields = ['firstName', 'lastName',

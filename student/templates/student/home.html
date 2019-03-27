@@ -2,7 +2,7 @@
 
 {% block header %}
 <a class="nav-link disabled" href="#">STUDENT</a>
-
+<a class="nav-link disabled" href="{% url 'student:home'  %}">HOME</a>
 <a class="nav-link" href="{% url 'student:profile' %}">PROFILE</a>
 {% if user.is_authenticated %}
 <a class="nav-link" href="{% url 'student:logout' %}">LOGOUT</a>
@@ -50,7 +50,6 @@
         </a>
     </div>
 </div>
-
 
 {% endif %}
 {% endfor %}
