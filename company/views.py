@@ -34,6 +34,8 @@ def home(request):
 @login_required(login_url="company:login")
 def addPost(request):
     company = getCurrentCompany(request)
+    if company.profileCompleted == False:
+        return redirect('company:editprofile')
 
     formInitialData = {'company': company}
     form = addPostForm(initial=formInitialData)

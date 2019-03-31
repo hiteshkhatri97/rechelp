@@ -34,6 +34,9 @@ def home(request):
         return viewOutsideProfile(request, int(request.GET.get('companyid')))
 
     if request.GET.get('apply') == 'apply':
+        print(student[0])
+        if student[0].profileCompleted == False:
+            return redirect('student:editprofile')
         appliedStudents(request.GET.get('postid'),
                         request.GET.get('studentid'))
         return redirect('student:home')
