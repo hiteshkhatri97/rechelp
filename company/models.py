@@ -13,7 +13,7 @@ class Company(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(default='', max_length=200)
     email = models.EmailField(default='')
-    phone = models.BigIntegerField(default='0')
+    phone = models.IntegerField(default='0')
     address = models.TextField(default='')
     profileCompleted = models.BooleanField(default=False)
 
@@ -87,6 +87,25 @@ class CompanyLoginForm(AuthenticationForm):
 
 
 class CompanyProfileForm(forms.ModelForm):
+    name=forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    email=forms.EmailField(widget=forms.EmailInput(
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    phone=forms.IntegerField(widget=forms.NumberInput(
+        attrs={
+            'class':'form-control',
+            'required':'required'
+        }
+        ))
+    address=forms.CharField(widget=forms.Textarea)
 
     class Meta:
         model = Company

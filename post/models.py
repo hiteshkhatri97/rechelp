@@ -34,7 +34,18 @@ class DateInput(forms.DateInput):
 
 class addPostForm(ModelForm):
     postExpiringDate = forms.DateField(
-        widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+        widget=forms.DateInput(
+            attrs={
+            'type': 'date',
+            'class':'form-control'
+            }
+            ))
+    postTechnology = forms.CharField(
+        widget=forms.Select(choices=TECHNOLOGY_CHOICES,
+            attrs={
+            'class':'form-control'
+            }
+            ))
 
     class Meta:
         model = Post
