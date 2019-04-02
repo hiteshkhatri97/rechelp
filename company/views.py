@@ -22,11 +22,18 @@ def home(request):
     if request.GET.get('delete') == 'delete':
         deletePost(request.GET.get('postid'))
         return redirect('company:home')
+
     if request.GET.get('appliedstudents') == 'applied students':
         return appliedStudents(request)
 
     if request.GET.get('viewprofile') == 'viewprofile':
         return viewOutsideProfile(request, int(request.GET.get('studentid')))
+
+    if request.GET.get('select') == 'select':
+        studentid = request.GET.get('studentid')
+        postid = request.GET.get('postid')
+        selectStudent(postid, studentid)
+        return appliedStudents(request)
 
     return render(request, 'company/home.html', {'posts': enumerate(currentCompanyPosts), 'postDatesSet': postDatesSet})
 
@@ -50,7 +57,7 @@ def addPost(request):
             collection = connectDatabase()
 
             result = collection.update(
-                {'id': int(newPost.id)}, {'$set': {'appliedStudents': []}})
+                {'id': int(newPost.id)}, {'$set': {'appliedStudents': [], 'selectedStudents': []}})
 
             return redirect('company:home')
     return render(request, 'company/addpost.html', {'form': form})
@@ -66,7 +73,7 @@ def viewProfile(request):
 @login_required(login_url="company:login")
 def editProfile(request):
     company = Company.objects.filter(user=request.user)
-    instance = company[0] 
+    instance = company[0]
     return profileForm(request, 'company', instance)
 
 
@@ -96,20 +103,16 @@ def deletePost(postId):
 
 
 def appliedStudents(request):
+
     postid = request.GET.get('postid')
-    print(postid, type(postid))
-    post = Post.objects.filter(id=postid)
-    collection = connectDatabase()
-    result = list(collection.find({'id': int(postid)}, {
-        'appliedStudents': 1, '_id': 0}))[0]['appliedStudents']
-    students = []
-    if len(result) > 0:
-        print('in if')
-        for id in result:
-            print(Student.objects.filter(id=int(id))[0])
-        students = [Student.objects.filter(id=int(id))[0] for id in result]
-    print(students)
-    return render(request, 'company/appliedstudents.html', {'students': students})
+    post = Post.objects.filter(id=postid)    
+
+    applied_students = getAppliedStudents(postid)
+    selected_students = getSelectedStudents(postid)
+    print('as', applied_students)
+    print('ss', selected_students)
+
+    return render(request, 'company/appliedstudents.html', {'appliedStudents': applied_students, 'postid':postid, 'selectedStudents': selected_students})
 
 
 def viewOutsideProfile(request, studentid):
@@ -119,3 +122,38 @@ def viewOutsideProfile(request, studentid):
     marks = [(field.name.replace("Marks", ""), getattr(student[0], field.name)) for field in Student._meta.get_fields() if field.name ==
              'wtMarks' or field.name == 'androidMarks' or field.name == 'iosMarks' or field.name == 'javaMarks' or field.name == 'pythonMarks' or field.name == 'cpi' or field.name == 'aptitude']
     return render(request, 'company/outsideprofile.html', {'marks': marks, 'details': details, 'student': student[0]})
+
+
+def selectStudent(postid, studentid):
+    collection = connectDatabase()
+    cursor = list(collection.find({"id": int(postid)}, {
+                  "selectedStudents": 1, '_id': 0}))[0]['selectedStudents']
+
+    if int(studentid) not in cursor:
+        cursor.append(int(studentid))
+
+    result = collection.update(
+        {'id': int(postid)}, {'$set': {'selectedStudents': cursor}})
+
+    
+def getAppliedStudents(postid):
+    collection = connectDatabase()
+    result = list(collection.find({'id': int(postid)}, {
+        'appliedStudents': 1, '_id': 0}))[0]['appliedStudents']
+    applied_students = []
+    if len(result) > 0:
+        for id in result:
+            applied_students = [Student.objects.filter(
+                id=int(id))[0] for id in result]
+    return applied_students
+
+def getSelectedStudents(postid):
+    collection = connectDatabase()
+    result = list(collection.find({'id': int(postid)}, {
+        'selectedStudents': 1, '_id': 0}))[0]['selectedStudents']
+    selected_students = []
+    if len(result) > 0:
+        for id in result:
+            selected_students = [Student.objects.filter(
+                id=int(id))[0] for id in result]
+    return selected_students

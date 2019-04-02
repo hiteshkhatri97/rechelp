@@ -40,6 +40,10 @@ def home(request):
         appliedStudents(request.GET.get('postid'),
                         request.GET.get('studentid'))
         return redirect('student:home')
+    
+    if request.GET.get('showresult') == 'showresult':
+        return showResult(request, request.GET.get('postid'),  request.GET.get('studentid'))
+
     if request.GET.get('predict') == 'predict':
         return predict(request)
 
@@ -51,10 +55,8 @@ def viewProfile(request):
     student = Student.objects.filter(user=request.user)
     details = [(field.name, getattr(student[0], field.name))
                for field in Student._meta.get_fields() if field.name == 'enrollmentNumber' or field.name == 'fieldsOfInterest']
-    print(details)
     marks = [(field.name.replace("Marks",""), getattr(student[0], field.name)) for field in Student._meta.get_fields() if field.name ==
              'wtMarks' or field.name == 'androidMarks' or field.name == 'iosMarks' or field.name == 'javaMarks' or field.name == 'pythonMarks' or field.name == 'cpi' or field.name == 'aptitude']
-    print(marks)
     return render(request, 'student/profile.html', {'marks': marks, 'details': details, 'student': student[0]})
 
 
@@ -107,6 +109,17 @@ def viewOutsideProfile(request, companyid):
               for field in Company._meta.get_fields() if field.name != 'post' and field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
     return render(request, 'student/outsideprofile.html', {'company': company[0], 'fields': fields})
 
+def showResult(request, postid, studentid):
+    collection = connectDatabase()
+
+    cursor = list(collection.find({'id': int(postid)}, {
+                  "selectedStudents": 1, '_id': 0}))[0]['selectedStudents']
+    message, error_message = '', ''
+    if int(studentid) in cursor:
+        message = 'Congratulations you are selected :)'
+    else:
+        error_message = 'Sorry you are not selected :('
+    return render(request, 'student/showresult.html', {'message': message, 'errormessage': error_message})
 
 def predict(request):
     student = Student.objects.filter(id=int(request.GET.get('studentid')))[0]
@@ -116,7 +129,6 @@ def predict(request):
     markk = getattr(student, fieldtoselect)
     aptitude = student.aptitude
     cpii = student.cpi
-    print(markk, aptitude, cpii)
 
     exceldir = os.path.realpath(os.path.join(
         os.getcwd(), os.path.dirname(__file__)))

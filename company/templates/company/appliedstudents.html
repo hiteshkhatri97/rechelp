@@ -12,8 +12,8 @@
 {% endblock header %}
 
 {% block content %}
-{% if students %}
-{% for student in students %}
+{% if appliedStudents %}
+{% for student in appliedStudents %}
 {% if student.firstName %}
 <div class="card mt-3 mb-3">
     <div class="card-body">
@@ -24,11 +24,23 @@
                 <input type="submit" class="btn btn-info" value="viewprofile" name="viewprofile">
             </form>
         </a>
+        {% if student in selectedStudents %}
         <a href="#" class="btn disabled">
             <form action="#" method="GET" class="form-inline">
                 <input type="hidden" value="{{ student.id }}" name="studentid" />
+                <input type="hidden" value="{{ postid }}" name="postid" />
+                <input type="submit" class="btn btn-info" value="selected" name="selected">
+            </form>
+        </a>
+        {% else %}
+        <a href="#" class="btn">
+            <form action="#" method="GET" class="form-inline">
+                <input type="hidden" value="{{ student.id }}" name="studentid" />
+                <input type="hidden" value="{{ postid }}" name="postid" />
                 <input type="submit" class="btn btn-info" value="select" name="select">
             </form>
+        </a>
+        {% endif %}
         </a>
     </div>
 </div>

@@ -17,13 +17,10 @@ def loginForm(request, user_type):
         if form.is_valid():
             user = form.get_user()
             if user and user.userType == user_type:
-                # TODO: DONE
                 login(request, user)
                 return redirect(user_type + ':home')
             else:
                 messages.success(request, "Error")
-    print("helooooooooo")
-    print(form)
 
     return render(request, user_type + '/login.html', {'form': form})
 
@@ -47,20 +44,16 @@ def signupForm(request, user_type):
 
 def profileForm(request, user_type, instance):
     form = None
-    print('form none')
     formInitialData = {'user': request.user, 'profileCompleted': True}
     studentFormInitialData = {'user': request.user,
                               'profileCompleted': True, 'picture': 'default.png'}
     if instance is None:
-        print('instance none')
         form = StudentProfileForm(
             initial=studentFormInitialData, instance=instance) if user_type == 'student' else CompanyProfileForm(initial=formInitialData, instance=instance)
-        print('form with initial data')
     else:
         print('instance')
         form = StudentProfileForm(
             initial=studentFormInitialData, instance=instance) if user_type == 'student' else CompanyProfileForm(initial=formInitialData, instance=instance)
-        print('form with instance data')
 
     if request.method == 'POST':
         print(instance)
@@ -68,13 +61,8 @@ def profileForm(request, user_type, instance):
             request.POST, request.FILES,instance=instance) if user_type == 'student' else CompanyProfileForm(request.POST, instance=instance)
         print(request.POST)
         if form.is_valid():
-            print('valid form')
             form.save()
-            print('form saved')
             return redirect(user_type + ':home')
-    # print("helloooooo")
-    # print(form)
-    # print("byeeeeeee")
     return render(request, user_type + '/editprofile.html', {'form': form})
 
 
