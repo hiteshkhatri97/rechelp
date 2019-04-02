@@ -14,29 +14,31 @@
 <div class="row justify-content-center">
     <div class="col-md-7">
         <div class="card">
-            	<div class="card-header"><h4>Edit Profile</h4></div>
-                <div class="card-body">
-                    <form method="POST" action="" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% for f in form %}
-                        {% if f.name|stringformat:"s" != "company"|stringformat:"s" %}
-                        <div class="form-group row">
-                            <label class="col-md-4 col-form-label text-md-right">
-                                {{ f.name|title }}
-                            </label>
-                            <div class="col-md-6">
-                                {{ f }}
-                            </div>
+            <div class="card-header">
+                <h4>Add Post</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for f in form %}
+                    {% if f.name|stringformat:"s" != "company"|stringformat:"s" %}
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label text-md-right">
+                            {{ f.name|title }}
+                        </label>
+                        <div class="col-md-6">
+                            {{ f }}
                         </div>
-                        {% else %}
-                        {{ f }}
-                        {% endif %}
-                        {% endfor %}
-                        <button type="submit" class="btn btn-primary" style="margin-left:240px">
-                                Save Changes
-                        </button>
-                    </form>
-                </div>
+                    </div>
+                    {% else %}
+                    {{ f }}
+                    {% endif %}
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary" style="margin-left:240px">
+                        Save Changes
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
