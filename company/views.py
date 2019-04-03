@@ -109,9 +109,6 @@ def appliedStudents(request):
 
     applied_students = getAppliedStudents(postid)
     selected_students = getSelectedStudents(postid)
-    print('as', applied_students)
-    print('ss', selected_students)
-
     return render(request, 'company/appliedstudents.html', {'appliedStudents': applied_students, 'postid':postid, 'selectedStudents': selected_students})
 
 
@@ -119,8 +116,7 @@ def viewOutsideProfile(request, studentid):
     student = Student.objects.filter(id=studentid)
     details = [(field.name, getattr(student[0], field.name))
                for field in Student._meta.get_fields() if field.name == 'enrollmentNumber' or field.name == 'fieldsOfInterest']
-    marks = [(field.name.replace("Marks", ""), getattr(student[0], field.name)) for field in Student._meta.get_fields() if field.name ==
-             'wtMarks' or field.name == 'androidMarks' or field.name == 'iosMarks' or field.name == 'javaMarks' or field.name == 'pythonMarks' or field.name == 'cpi' or field.name == 'aptitude']
+    marks = [(field.name.replace("Marks", ""), getattr(student[0], field.name)) for field in Student._meta.get_fields() if 'Marks' in field.name or field.name == 'cpi' or field.name == 'aptitude']
     return render(request, 'company/outsideprofile.html', {'marks': marks, 'details': details, 'student': student[0]})
 
 
