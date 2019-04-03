@@ -144,17 +144,11 @@ def predict(request):
     X_train, x_test, Y_train, y_test = train_test_split(
         X, Y, test_size=0.2)
 
-    model = LinearRegression()
     classifier = KNeighborsClassifier(n_neighbors=5, metric='minkowski', p=2)
 
-    model.fit(X_train, Y_train)
     classifier.fit(X_train, Y_train)
 
-    accuracy = model.score(x_test, y_test)
-
     apple = np.array([cpii, markk, aptitude]).reshape(1, 3)
-
-    predictedresult = model.predict(apple)
     prediction = classifier.predict(apple)
     message, error_message = '', ''
     studentname = student.firstName + ' ' + student.lastName
