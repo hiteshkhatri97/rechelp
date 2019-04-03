@@ -105,18 +105,19 @@ def deletePost(postId):
 def appliedStudents(request):
 
     postid = request.GET.get('postid')
-    post = Post.objects.filter(id=postid)    
+    post = Post.objects.filter(id=postid)
 
     applied_students = getAppliedStudents(postid)
     selected_students = getSelectedStudents(postid)
-    return render(request, 'company/appliedstudents.html', {'appliedStudents': applied_students, 'postid':postid, 'selectedStudents': selected_students})
+    return render(request, 'company/appliedstudents.html', {'appliedStudents': applied_students, 'postid': postid, 'selectedStudents': selected_students})
 
 
 def viewOutsideProfile(request, studentid):
     student = Student.objects.filter(id=studentid)
     details = [(field.name, getattr(student[0], field.name))
                for field in Student._meta.get_fields() if field.name == 'enrollmentNumber' or field.name == 'fieldsOfInterest']
-    marks = [(field.name.replace("Marks", ""), getattr(student[0], field.name)) for field in Student._meta.get_fields() if 'Marks' in field.name or field.name == 'cpi' or field.name == 'aptitude']
+    marks = [(field.name.replace("Marks", ""), getattr(student[0], field.name)) for field in Student._meta.get_fields(
+    ) if 'Marks' in field.name or field.name == 'cpi' or field.name == 'aptitude']
     return render(request, 'company/outsideprofile.html', {'marks': marks, 'details': details, 'student': student[0]})
 
 
@@ -131,17 +132,50 @@ def selectStudent(postid, studentid):
     result = collection.update(
         {'id': int(postid)}, {'$set': {'selectedStudents': cursor}})
 
-    
+
 def getAppliedStudents(postid):
     collection = connectDatabase()
     result = list(collection.find({'id': int(postid)}, {
         'appliedStudents': 1, '_id': 0}))[0]['appliedStudents']
+
     applied_students = []
+
     if len(result) > 0:
         for id in result:
             applied_students = [Student.objects.filter(
                 id=int(id))[0] for id in result]
-    return applied_students
+
+    post_technology = Post.objects.filter(id=int(postid))[0].postTechnology
+    print(post_technology)
+    
+    applied_students_marks = []
+
+    for student in applied_students:
+        current_students_marks_total = 0
+        for field in Student._meta.get_fields():            
+            # normalizing the marks out of 100 and multiplying with weights. if current marks are posted technologythen weight = 0.7 else 0.2
+            if 'Marks' in field.name:
+                current_field = field.name.replace("Marks", "")
+                if current_field == post_technology:
+                    current_students_marks_total += (getattr(student, field.name) * 100 / 70) * 0.7
+                else:
+                    current_students_marks_total += (getattr(student, field.name) * 100 / 70) * 0.2
+            elif field.name == 'cpi':
+                current_students_marks_total += (getattr(student, field.name) * 100 / 10) * 0.2
+            elif field.name == 'aptitude':
+                current_students_marks_total += getattr(student, field.name) * 0.2
+        # applying multiple linear regression formula : y = b1x1 + b2x2 + ... where x are marks, b are weights
+        applied_students_marks.append(current_students_marks_total)
+
+    # associatingstudents with their ML score
+    appliedStudents = list(zip(applied_students, applied_students_marks))
+
+    # sorting the applied students in descending order
+    sorted_applied_students = [student[0] for student in sorted(
+        appliedStudents, key=lambda appliedStudents: appliedStudents[1], reverse = True)]
+
+    return sorted_applied_students
+
 
 def getSelectedStudents(postid):
     collection = connectDatabase()
