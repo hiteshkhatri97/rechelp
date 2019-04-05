@@ -31,6 +31,27 @@ class Post(models.Model):
 class DateInput(forms.DateInput):
     input_type = 'date'
 
+# class editPostForm(ModelForm):
+#     postExpiringDate = forms.DateField(
+#         widget=forms.DateInput(
+#             attrs={
+#             'type': 'date',
+#             'class':'form-control'
+#             }
+#             ))
+#     postTechnology = forms.CharField(
+#         widget=forms.Select(choices=TECHNOLOGY_CHOICES,
+#             attrs={
+#             'class':'form-control'
+#             }
+#             ))
+#     class Meta:
+#         model = Post
+#         fields = ['postTechnology', 'company', 'postExpiringDate']
+
+#     def __init__(self, *args, **kwargs):
+#         super(editPostForm, self).__init__(*args, **kwargs)
+#         self.fields['company'].widget = HiddenInput()
 
 class addPostForm(ModelForm):
     postExpiringDate = forms.DateField(

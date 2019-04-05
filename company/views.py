@@ -11,6 +11,14 @@ from student.models import Student
 import datetime
 User = get_user_model()
 
+@login_required(login_url="company:login")
+def editPost(request):
+    print(request)
+    print("editreach")
+    postid=Post.objects.filter(id=request.GET.get('postid')).first()
+    print("postidgot")
+    print(postid)
+    return addPost(request,postid)
 
 @login_required(login_url="company:login")
 def home(request):
@@ -18,6 +26,9 @@ def home(request):
     currentCompanyPosts = Post.objects.filter(
         company=getCurrentCompany(request))
     postDatesSet = set([post.postDate for post in currentCompanyPosts])
+
+    if request.GET.get('editpost')=='edit post':
+        return editPost(request)
 
     if request.GET.get('delete') == 'delete':
         deletePost(request.GET.get('postid'))
@@ -39,19 +50,23 @@ def home(request):
 
 
 @login_required(login_url="company:login")
-def addPost(request):
+def addPost(request,instance=None):
+    print("addpostreach")
+    print(instance)
     company = getCurrentCompany(request)
     if company.profileCompleted == False:
         return redirect('company:editprofile')
-
-    formInitialData = {'company': company}
-    form = addPostForm(initial=formInitialData)
+    if instance is None:
+        formInitialData = {'company': company}
+        form = addPostForm(initial=formInitialData)
+    else:
+        formInitialData = {'company': company}
+        form = addPostForm(initial=formInitialData,instance=instance)
 
     if request.method == 'POST':
         form = addPostForm(
-            request.POST)
+            request.POST,instance=instance)
         if form.is_valid():
-
             newPost = form.save()
 
             collection = connectDatabase()
@@ -60,6 +75,8 @@ def addPost(request):
                 {'id': int(newPost.id)}, {'$set': {'appliedStudents': [], 'selectedStudents': []}})
 
             return redirect('company:home')
+    elif not(instance is None):
+        return render(request, 'company/editpost.html', {'form': form})
     return render(request, 'company/addpost.html', {'form': form})
 
 
