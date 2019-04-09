@@ -13,11 +13,7 @@ User = get_user_model()
 
 @login_required(login_url="company:login")
 def editPost(request):
-    print(request)
-    print("editreach")
     postid=Post.objects.filter(id=request.GET.get('postid')).first()
-    print("postidgot")
-    print(postid)
     return addPost(request,postid)
 
 @login_required(login_url="company:login")
@@ -51,8 +47,6 @@ def home(request):
 
 @login_required(login_url="company:login")
 def addPost(request,instance=None):
-    print("addpostreach")
-    print(instance)
     company = getCurrentCompany(request)
     if company.profileCompleted == False:
         return redirect('company:editprofile')
@@ -71,8 +65,8 @@ def addPost(request,instance=None):
 
             collection = connectDatabase()
 
-            result = collection.update(
-                {'id': int(newPost.id)}, {'$set': {'appliedStudents': [], 'selectedStudents': []}})
+            if instance is None:
+                result = collection.update({'id': int(newPost.id)}, {'$set': {'appliedStudents': [], 'selectedStudents': []}})
 
             return redirect('company:home')
     elif not(instance is None):
@@ -204,3 +198,5 @@ def getSelectedStudents(postid):
             selected_students = [Student.objects.filter(
                 id=int(id))[0] for id in result]
     return selected_students
+
+
