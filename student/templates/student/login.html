@@ -6,7 +6,7 @@
 <a class="nav-link" href="{% url 'company:login'  %}">COMPANY</a>
 <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"> -->
 <style>
-body{
+    body{
     background-image: url("{% static 'images/background.jpg' %}")
 }
 </style>
@@ -18,29 +18,32 @@ body{
         {% csrf_token %}
         <h2 class="text-center">Log in</h2>
         {% if form.errors %}
-                <div class="alert alert-danger">
-                    <strong>Please enter a correct username and password. Note that both fields may be case-sensitive.
-                    </strong>
-                </div>
-            {% endif %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-danger">
-                        <strong>Please enter a correct username and password. Note that both fields may be case-sensitive.
-                        </strong>
-                    </div>
-                {% endfor %}
-            {% endif %}
+        <div class="alert alert-danger">
+            <strong>Please enter a correct username and password. Note that both fields may be case-sensitive.
+            </strong>
+        </div>
+        {% endif %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger">
+            <strong>Please enter a correct username and password. Note that both fields may be case-sensitive.
+            </strong>
+        </div>
+        {% endfor %}
+        {% endif %}
         {% for field in form %}
-            <div class="form-group">
-                {{ field }}
-            </div>
+        <div class="form-group">
+            {{ field }}
+        </div>
         {% endfor %}
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">Log in</button>
         </div>
         <div class="d-flex justify-content-center links">
-                Don't have an account? <a href="{% url 'student:signup' %}" class="ml-2">Sign Up</a>
+            Don't have an account? <a href="{% url 'student:signup' %}" class="ml-2">Sign Up</a>
+        </div>
+        <div class="links mt-3">
+            Graduated Student? - Share your experience<a href="{% url 'student:graduatedStudent' %}" class="ml-2">here</a>
         </div>
     </form>
 </div>

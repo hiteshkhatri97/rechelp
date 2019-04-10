@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from . models import StudentCreationForm, StudentLoginForm
+from . models import StudentCreationForm, StudentLoginForm, GraduatedStudentForm
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth import get_user_model
@@ -40,7 +40,7 @@ def home(request):
         appliedStudents(request.GET.get('postid'),
                         request.GET.get('studentid'))
         return redirect('student:home')
-    
+
     if request.GET.get('showresult') == 'showresult':
         return showResult(request, request.GET.get('postid'),  request.GET.get('studentid'))
 
@@ -55,7 +55,8 @@ def viewProfile(request):
     student = Student.objects.filter(user=request.user)
     details = [(field.name, getattr(student[0], field.name))
                for field in Student._meta.get_fields() if field.name == 'enrollmentNumber' or field.name == 'fieldsOfInterest']
-    marks = [(field.name.replace("Marks", ""), getattr(student[0], field.name)) for field in Student._meta.get_fields() if 'Marks' in field.name or field.name == 'cpi' or field.name == 'aptitude']
+    marks = [(field.name.replace("Marks", ""), getattr(student[0], field.name)) for field in Student._meta.get_fields(
+    ) if 'Marks' in field.name or field.name == 'cpi' or field.name == 'aptitude']
     return render(request, 'student/profile.html', {'marks': marks, 'details': details, 'student': student[0]})
 
 
@@ -108,6 +109,7 @@ def viewOutsideProfile(request, companyid):
               for field in Company._meta.get_fields() if field.name != 'post' and field.name != 'id' and field.name != 'user' and field.name != 'profileCompleted']
     return render(request, 'student/outsideprofile.html', {'company': company[0], 'fields': fields})
 
+
 def showResult(request, postid, studentid):
     collection = connectDatabase()
 
@@ -119,6 +121,7 @@ def showResult(request, postid, studentid):
     else:
         error_message = 'Sorry you are not selected :('
     return render(request, 'student/showresult.html', {'message': message, 'errormessage': error_message})
+
 
 def predict(request):
     student = Student.objects.filter(id=int(request.GET.get('studentid')))[0]
@@ -167,3 +170,42 @@ def predict(request):
         data.loc[n] = (cpii, markk, aptitude, round(pree))
         data.to_excel(excel, sheet_name="Sheet1")
     return render(request, 'student/predictionresult.html', {'message': message, 'errormessage': error_message})
+
+
+def graduatedStudent(request):
+
+    form = GraduatedStudentForm()
+    if request.method == 'POST':
+        form = GraduatedStudentForm(request.POST)
+        if form.is_valid:
+            try:
+                exceldir = os.path.realpath(os.path.join(
+                    os.getcwd(), os.path.dirname(__file__)))
+                excel = os.path.join(exceldir, 'lr.xlsx')
+                data = pd.read_excel(excel, sheet_name="Sheet1")
+
+                cpi = float(request.POST.get("cpi"))
+                aptitude = request.POST.get("aptitude")
+                wtMarks = request.POST.get("wtMarks")
+                androidMarks = request.POST.get("androidMarks")
+                iosMarks = request.POST.get("iosMarks")
+                javaMarks = request.POST.get("javaMarks")
+                pythonMarks = request.POST.get("pythonMarks")
+                recruited = request.POST.get("recruited")
+                selectedTechnology = request.POST.get("selectedTechnology")
+                company = request.POST.get("company")
+
+                n = len(data) - 1
+
+                data.loc[n] = (cpi, aptitude, wtMarks, androidMarks,
+                               iosMarks, javaMarks, pythonMarks,selectedTechnology,company, recruited)
+                data.to_excel(excel, sheet_name="Sheet1")
+                message = "data entery successful"
+                return render(request, 'student/gradutedstudent.html', {'message': message})
+
+            except Exception as e:
+                print(e)
+                error_message = "please try again"
+                return render(request, 'student/gradutedstudent.html', {'error_message': error_message, 'form': form})
+
+    return render(request, 'student/gradutedstudent.html', {'form': form})
