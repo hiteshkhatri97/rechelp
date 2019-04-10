@@ -5,12 +5,22 @@
 <a class="nav-link" href="{% url 'student:login'  %}">GO BACK</a>
 {% endblock header %}
 {% block content %}
+{% if message %}
+<div class="alert alert-success mt-3" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+{% if errormessage %}
+<div class="alert alert-danger mt-3" role="alert">
+    {{ errormessage }}
+</div>
+{% endif %}
+{% if form %}
 <div class="row justify-content-center">
-    {% if form %}
     <div class="col-md-7">
         <div class="card">
             <div class="card-header">
-                <h4>Enter Data</h4>
+                <h4>Share Experience</h4>
             </div>
             <div class="card-body">
                 <form method="POST" action="" enctype="multipart/form-data">
@@ -32,6 +42,6 @@
             </div>
         </div>
     </div>
-    {% endif %}
 </div>
+{% endif %}
 {% endblock content %}

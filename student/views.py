@@ -200,12 +200,12 @@ def graduatedStudent(request):
                 data.loc[n] = (cpi, aptitude, wtMarks, androidMarks,
                                iosMarks, javaMarks, pythonMarks,selectedTechnology,company, recruited)
                 data.to_excel(excel, sheet_name="Sheet1")
-                message = "data entery successful"
+                message = "Data entry successful"
                 return render(request, 'student/gradutedstudent.html', {'message': message})
 
             except Exception as e:
                 print(e)
                 error_message = "please try again"
-                return render(request, 'student/gradutedstudent.html', {'error_message': error_message, 'form': form})
+                return render(request, 'student/gradutedstudent.html', {'errormessage': error_message, 'form': form})
 
     return render(request, 'student/gradutedstudent.html', {'form': form})
