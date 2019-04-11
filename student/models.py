@@ -199,7 +199,7 @@ RECRUITED_CHOICES = (
 class GraduatedStudentForm(forms.Form):
 
     COMPANY_CHOICES = tuple(
-         [(company.name,) * 2 for company in Company.objects.all()])
+         [(company.id,company.name) for company in Company.objects.all()])
 
     RECRUITED_CHOICES = (
         ('1', 'YES'),

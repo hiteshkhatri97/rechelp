@@ -26,7 +26,7 @@ User = get_user_model()
 @login_required(login_url="student:login")
 def home(request):
     posts = Post.objects.all()
-    companys = Company.objects.all()
+    companys = [Company.objects.filter(id = post['company_id']).first() for post in posts.values('company_id').distinct()]
     student = Student.objects.filter(user=request.user)
     appliedPosts = getAppliedPosts(student[0].id)
 
@@ -126,6 +126,7 @@ def showResult(request, postid, studentid):
 def predict(request):
     student = Student.objects.filter(id=int(request.GET.get('studentid')))[0]
     technology = request.GET.get('posttechnology')
+    companyid = request.GET.get('companyid')
     fieldtoselect = [
         field.name for field in Student._meta.get_fields() if technology.replace('Marks', '') in field.name][0]
     markk = getattr(student, fieldtoselect)
@@ -137,11 +138,20 @@ def predict(request):
     excel = os.path.join(exceldir, 'lr.xlsx')
     data = pd.read_excel(excel, sheet_name="Sheet1")
     cpi = data['cpi']
-    marks = data['marks']
     apti = data['aptitude']
     rec = data['recruited']
-    X = pd.DataFrame({'cpi': data['cpi'],
-                      'marks': data['marks'], 'apti': data['aptitude']})
+    wtMarks = data['wtMarks']
+    androidMarks = data['androidMarks']
+    iosMarks = data['iosMarks']
+    javaMarks = data['javaMarks']
+    pythonMarks = data['pythonMarks']
+    selectedTechnology = data['selectedTechnology']
+    company = columns = data['company']
+    marks = {'wt': wtMarks, 'android': androidMarks,
+             'ios': iosMarks, 'java': javaMarks, 'python': pythonMarks}
+
+    X = pd.DataFrame({'cpi': cpi,
+                      'marks': marks[technology], 'apti': apti, 'company': company})
     Y = pd.DataFrame({'rec': data['recruited']})
 
     X_train, x_test, Y_train, y_test = train_test_split(
@@ -151,7 +161,7 @@ def predict(request):
 
     classifier.fit(X_train, Y_train)
 
-    apple = np.array([cpii, markk, aptitude]).reshape(1, 3)
+    apple = np.array([cpii, markk, aptitude,companyid]).reshape(1, 4)
     prediction = classifier.predict(apple)
     message, error_message = '', ''
     studentname = student.firstName + ' ' + student.lastName
@@ -164,11 +174,6 @@ def predict(request):
         error_message = 'Sorry ' + studentname + ', you should work harder to get placed in ' + \
             companyname + ' as ' + technology + ' developer :('
 
-    l = len(data)
-    n = l + 1
-    if accuracy >= 0.8:
-        data.loc[n] = (cpii, markk, aptitude, round(pree))
-        data.to_excel(excel, sheet_name="Sheet1")
     return render(request, 'student/predictionresult.html', {'message': message, 'errormessage': error_message})
 
 
@@ -184,6 +189,8 @@ def graduatedStudent(request):
                 excel = os.path.join(exceldir, 'lr.xlsx')
                 data = pd.read_excel(excel, sheet_name="Sheet1")
 
+                firstNamme = request.POST.get("firstName")
+                lastName = request.POST.get("lastName")
                 cpi = float(request.POST.get("cpi"))
                 aptitude = request.POST.get("aptitude")
                 wtMarks = request.POST.get("wtMarks")
@@ -195,17 +202,17 @@ def graduatedStudent(request):
                 selectedTechnology = request.POST.get("selectedTechnology")
                 company = request.POST.get("company")
 
-                n = len(data) - 1
+                n = len(data)
 
-                data.loc[n] = (cpi, aptitude, wtMarks, androidMarks,
-                               iosMarks, javaMarks, pythonMarks,selectedTechnology,company, recruited)
+                data.loc[n] = (firstName, lastName, cpi, aptitude, wtMarks, androidMarks,
+                               iosMarks, javaMarks, pythonMarks, selectedTechnology, company, recruited)
                 data.to_excel(excel, sheet_name="Sheet1")
                 message = "Data entry successful"
                 return render(request, 'student/gradutedstudent.html', {'message': message})
 
             except Exception as e:
                 print(e)
-                error_message = "please try again"
+                error_message = "Please try again"
                 return render(request, 'student/gradutedstudent.html', {'errormessage': error_message, 'form': form})
 
     return render(request, 'student/gradutedstudent.html', {'form': form})
