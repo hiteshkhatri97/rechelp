@@ -153,11 +153,14 @@ def getAppliedStudents(postid):
 
     if len(result) > 0:
         for id in result:
-            applied_students = [Student.objects.filter(
-                id=int(id))[0] for id in result]
+            try:
+                current_student = Student.objects.filter(id=int(id))[0]
+                applied_students.append(current_student)
+            except IndexError:
+                print("Student with " + str(id) + " is deleted")
+                
 
     post_technology = Post.objects.filter(id=int(postid))[0].postTechnology
-    print(post_technology)
     
     applied_students_marks = []
 
