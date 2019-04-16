@@ -18,7 +18,8 @@ def editPost(request):
 
 @login_required(login_url="company:login")
 def home(request):
-
+    if request.user.userType == 'student':
+        return redirect('student:home')
     currentCompanyPosts = Post.objects.filter(
         company=getCurrentCompany(request))
     postDatesSet = set([post.postDate for post in currentCompanyPosts])
@@ -89,10 +90,14 @@ def editProfile(request):
 
 
 def companyLogin(request):
+    if request.user.is_authenticated:
+        return redirect(request.user.userType + ':home')
     return loginForm(request, 'company')
 
 
 def signup(request):
+    if request.user.is_authenticated:
+        return redirect(request.user.userType + ':home')
     return signupForm(request, 'company')
 
 
@@ -197,9 +202,7 @@ def getSelectedStudents(postid):
         'selectedStudents': 1, '_id': 0}))[0]['selectedStudents']
     selected_students = []
     if len(result) > 0:
-        for id in result:
-            selected_students = [Student.objects.filter(
-                id=int(id))[0] for id in result]
+        selected_students = [Student.objects.filter(id=int(id))[0] for id in result]
     return selected_students
 
 

@@ -25,6 +25,8 @@ User = get_user_model()
 
 @login_required(login_url="student:login")
 def home(request):
+    if request.user.userType == 'company':
+        return redirect('company:home')
     posts = Post.objects.all()
     companys = [Company.objects.filter(id = post['company_id']).first() for post in posts.values('company_id').distinct()]
     student = Student.objects.filter(user=request.user)
@@ -68,10 +70,14 @@ def editProfile(request):
 
 
 def studentLogin(request):
+    if request.user.is_authenticated:
+        return redirect(request.user.userType + ':home')
     return loginForm(request, 'student')
 
 
 def signup(request):
+    if request.user.is_authenticated:
+        return redirect(request.user.userType + ':home')
     return signupForm(request, 'student')
 
 
