@@ -6,7 +6,9 @@
 <a class="nav-link" href="{% url 'company:login'  %}">COMPANY</a>
 <style>
     body{
-        background-image: url("{% static 'images/background.jpg' %}")
+        background: url("{% static 'images/background.jpg' %}");
+        background-size: cover;
+        background-repeat: no-repeat;
     }
 </style>
 {% endblock header %}
@@ -20,21 +22,24 @@
     <button type="reset" class="btn btn-danger">reset</button>
 </form> -->
 <div class="login-form">
-        <form method="POST" action="" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h2 class="text-center">Sign Up</h2>
-            {% for field in form %}
-            <div class="form-group">
-                {{ field.errors }}
-                {{ field }}
-            </div>
-            {% endfor %}
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-            </div>
-            <div class="d-flex justify-content-center links">
-                    Already have an account? <a href="{% url 'student:login' %}" class="ml-2">Log In</a>
-            </div>
-        </form>
-    </div>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2 class="text-center">Sign Up</h2>
+        {% for field in form %}
+        <div class="form-group">
+            {{ field.errors }}
+            {{ field }}
+        </div>
+        {% endfor %}
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        </div>
+        <div class="d-flex justify-content-center links">
+            Already have an account? <a href="{% url 'student:login' %}" class="ml-2">Log In</a>
+        </div>
+    </form>
+</div>
+
+
+
 {% endblock content %}

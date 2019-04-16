@@ -7,7 +7,9 @@
 <a class="nav-link" href="{% url 'student:login'  %}">STUDENT</a>
 <style>
     body{
-        background-image: url("{% static 'images/background.jpg' %}")
+        background: url("{% static 'images/background.jpg' %}");
+        background-size: cover;
+        background-repeat: no-repeat;
     }
 </style>
 {% endblock header %}
@@ -15,35 +17,35 @@
 {% block content %}
 
 <div class="login-form">
-        <form method="POST" action="" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h2 class="text-center">Log in</h2>
-            {% if form.errors %}
-                <div class="alert alert-danger">
-                    <strong>Please enter a correct username and password. Note that both fields may be case-sensitive.
-                    </strong>
-                </div>
-            {% endif %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-danger">
-                        <strong>Please enter a correct username and password. Note that both fields may be case-sensitive.
-                        </strong>
-                    </div>
-                {% endfor %}
-            {% endif %}
-            {% for field in form %}
-            <div class="form-group">
-                {{ field }}
-            </div>
-            {% endfor %}
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Log in</button>
-            </div>
-            <div class="d-flex justify-content-center links">
-                    Don't have an account? <a href="{% url 'company:signup' %}" class="ml-2">Sign Up</a>
-            </div>
-        </form>
-    </div>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2 class="text-center">Log in</h2>
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Please enter a correct username and password. Note that both fields may be case-sensitive.
+            </strong>
+        </div>
+        {% endif %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger">
+            <strong>Please enter a correct username and password. Note that both fields may be case-sensitive.
+            </strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% for field in form %}
+        <div class="form-group">
+            {{ field }}
+        </div>
+        {% endfor %}
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Log in</button>
+        </div>
+        <div class="d-flex justify-content-center links">
+            Don't have an account? <a href="{% url 'company:signup' %}" class="ml-2">Sign Up</a>
+        </div>
+    </form>
+</div>
 
 {% endblock content %}
